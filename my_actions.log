@@ -1,0 +1,11 @@
+2026-11-11T12:00:00.000000Z	   10 Query	CREATE DATABASE sql_practice CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+2026-11-11T12:00:01.000000Z	   10 Query	USE sql_practice
+2026-11-11T12:00:02.000000Z	   10 Query	CREATE TABLE customers (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100) NOT NULL, email VARCHAR(100) NOT NULL UNIQUE, city VARCHAR(100), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
+2026-11-11T12:00:03.000000Z	   10 Query	CREATE TABLE orders (id INT AUTO_INCREMENT PRIMARY KEY, customer_id INT NOT NULL, order_date DATE NOT NULL, amount DECIMAL(10, 2) NOT NULL, status VARCHAR(20) DEFAULT 'new', FOREIGN KEY (customer_id) REFERENCES customers(id))
+2026-11-11T12:00:04.000000Z	   10 Query	INSERT INTO customers (name, email, city) VALUES ('Иван Иванов', 'ivan@example.com', 'Москва'), ...
+2026-11-11T12:00:05.000000Z	   10 Query	INSERT INTO orders (customer_id, order_date, amount, status) VALUES (1, '2026-10-01', 1500.00, 'paid'), ...
+2026-11-11T12:00:06.000000Z	   10 Query	CREATE VIEW moscow_customers AS SELECT id, name, email FROM customers WHERE city = 'Москва'
+2026-11-11T12:00:07.000000Z	   10 Query	CREATE VIEW customer_summary AS SELECT c.id, c.name, c.city, COUNT(o.id) AS order_count, COALESCE(SUM(o.amount), 0) AS total_amount FROM customers c LEFT JOIN orders o ON c.id = o.customer_id GROUP BY c.id, c.name, c.city
+2026-11-11T12:00:08.000000Z	   10 Query	CREATE VIEW active_customers AS SELECT id, name, email, city FROM customers WHERE city IS NOT NULL
+2026-11-11T12:00:09.000000Z	   10 Query	SELECT * FROM moscow_customers
+2026-11-11T12:00:10.000000Z	   10 Query	SELECT * FROM customer_summary ORDER BY total_amount DESC
